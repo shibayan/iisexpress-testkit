@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>IisExpressTestKit</id>
+    <version>$version$</version>
+    <title>IIS Express TestKit</title>
+    <authors>shibayan</authors>
+    <owners>shibayan</owners>
+    <licenseUrl>https://github.com/shibayan/iisexpress-testkit/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/shibayan/iisexpress-testkit</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>IIS Express TestKit for xUnit.net</description>
+    <tags>iis test xunit</tags>
+  </metadata>
+</package>
