@@ -55,8 +55,17 @@ namespace IisExpressTestKit.Tests
         [Fact]
         public void StaticFileのテスト()
         {
-            Iis.Request("/test.txt")
-               .IsPath("/test.txt")
+            Iis.Request("/test", "outbound.html")
+               .IsHeaderValue("Content-Type", "text/html")
+               .IsStatusCode(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public void OutboundRuleのテスト()
+        {
+            Iis.Request("/outbound.html", @".\outbound.html")
+               .IsHeaderValue("Content-Type", "text/html")
+               .HtmlAttribute("a", "href", "/translated/hoge")
                .IsStatusCode(HttpStatusCode.OK);
         }
     }

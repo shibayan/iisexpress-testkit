@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace IisExpressTestKit
@@ -35,9 +36,7 @@ namespace IisExpressTestKit
     <modules runAllManagedModulesForAllRequests=""true"">
       <add name=""EchoHttpModule"" type=""IisExpressTestKit.EchoHttpModule, IisExpressTestKit"" />
     </modules>
-    <rewrite>
-      <rules configSource=""{0}"" />
-    </rewrite>
+    {0}
   </system.webServer>
 </configuration>";
 
@@ -71,9 +70,9 @@ namespace IisExpressTestKit
             Stop();
         }
 
-        public IisExpressResponse Request(string path)
+        public IisExpressResponse Request(string path, string originalFile = null)
         {
-            var response = ExecuteRequest(FormatAbsoluteUrl(path));
+            var response = ExecuteRequest(FormatAbsoluteUrl(path), originalFile);
 
             var data = new IisExpressResponse
             {
@@ -86,6 +85,11 @@ namespace IisExpressTestKit
             if (!string.IsNullOrEmpty(data.Headers["Location"]))
             {
                 data.Headers["Location"] = data.Headers["Location"].Replace(FormatAbsoluteUrl(), "");
+            }
+
+            using (var reader = new StreamReader(response.GetResponseStream()))
+            {
+                data.Body = reader.ReadToEnd();
             }
 
             return data;
@@ -107,8 +111,8 @@ namespace IisExpressTestKit
 
             CopyFileToDirectory(RewriteConfigPath, _wwwroot);
             CopyFileToDirectory(typeof(IisExpress).Assembly.Location, binDirectory);
-
-            var contents = string.Format(WebConfigTemplate, Path.GetFileName(RewriteConfigPath));
+            
+            var contents = string.Format(WebConfigTemplate, Regex.Replace(File.ReadAllText(RewriteConfigPath), @"^<\?xml.*$", "", RegexOptions.Multiline));
 
             File.WriteAllText(Path.Combine(_wwwroot, "Web.config"), contents);
         }
@@ -133,6 +137,8 @@ namespace IisExpressTestKit
 
                         if (response.StatusCode == HttpStatusCode.InternalServerError)
                         {
+                            Stop();
+
                             throw;
                         }
 
@@ -149,11 +155,16 @@ namespace IisExpressTestKit
             return $"http://localhost:{_port}{path}";
         }
 
-        private static HttpWebResponse ExecuteRequest(string url)
+        private static HttpWebResponse ExecuteRequest(string url, string originalFile)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             request.AllowAutoRedirect = false;
+
+            if (!string.IsNullOrEmpty(originalFile))
+            {
+                request.Headers["X-OriginalFile"] = Path.GetFullPath(originalFile);
+            }
 
             try
             {
