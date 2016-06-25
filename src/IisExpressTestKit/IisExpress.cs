@@ -7,8 +7,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
 
-using Newtonsoft.Json;
-
 namespace IisExpressTestKit
 {
     public class IisExpress : IDisposable
@@ -34,6 +32,9 @@ namespace IisExpressTestKit
     <handlers>
       <add name=""EchoHttpHandler"" verb=""*"" path=""*"" type=""IisExpressTestKit.EchoHttpHandler, IisExpressTestKit"" resourceType=""Unspecified"" />
     </handlers>
+    <modules runAllManagedModulesForAllRequests=""true"">
+      <add name=""EchoHttpModule"" type=""IisExpressTestKit.EchoHttpModule, IisExpressTestKit"" />
+    </modules>
     <rewrite>
       <rules configSource=""{0}"" />
     </rewrite>
@@ -72,31 +73,22 @@ namespace IisExpressTestKit
 
         public IisExpressResponse Request(string path)
         {
-            var response = ExecuteRequest(AbsoluteUrl(path));
-            
-            using (var reader = new StreamReader(response.GetResponseStream()))
+            var response = ExecuteRequest(FormatAbsoluteUrl(path));
+
+            var data = new IisExpressResponse
             {
-                IisExpressResponse data;
+                Host = response.Headers["X-IIS-RealHost"],
+                Path = response.Headers["X-IIS-RealPath"],
+                StatusCode = response.StatusCode,
+                Headers = new NameValueCollection(response.Headers)
+            };
 
-                try
-                {
-                    data = JsonConvert.DeserializeObject<IisExpressResponse>(reader.ReadToEnd());
-                }
-                catch
-                {
-                    data = new IisExpressResponse();
-                }
-
-                data.StatusCode = response.StatusCode;
-                data.Headers = new NameValueCollection(response.Headers);
-
-                if (!string.IsNullOrEmpty(data.Headers["Location"]))
-                {
-                    data.Headers["Location"] = data.Headers["Location"].Replace(AbsoluteUrl(), "");
-                }
-
-                return data;
+            if (!string.IsNullOrEmpty(data.Headers["Location"]))
+            {
+                data.Headers["Location"] = data.Headers["Location"].Replace(FormatAbsoluteUrl(), "");
             }
+
+            return data;
         }
 
         private void PrepareForStart()
@@ -115,7 +107,6 @@ namespace IisExpressTestKit
 
             CopyFileToDirectory(RewriteConfigPath, _wwwroot);
             CopyFileToDirectory(typeof(IisExpress).Assembly.Location, binDirectory);
-            CopyFileToDirectory(typeof(JsonConvert).Assembly.Location, binDirectory);
 
             var contents = string.Format(WebConfigTemplate, Path.GetFileName(RewriteConfigPath));
 
@@ -130,7 +121,7 @@ namespace IisExpressTestKit
             {
                 try
                 {
-                    client.DownloadString(AbsoluteUrl());
+                    client.DownloadString(FormatAbsoluteUrl());
 
                     break;
                 }
@@ -144,6 +135,8 @@ namespace IisExpressTestKit
                         {
                             throw;
                         }
+
+                        break;
                     }
                 }
 
@@ -151,7 +144,7 @@ namespace IisExpressTestKit
             }
         }
 
-        private string AbsoluteUrl(string path = "")
+        private string FormatAbsoluteUrl(string path = "")
         {
             return $"http://localhost:{_port}{path}";
         }

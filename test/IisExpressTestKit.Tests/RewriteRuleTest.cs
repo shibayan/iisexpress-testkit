@@ -18,8 +18,8 @@ namespace IisExpressTestKit.Tests
                .IsPath("/translated/hoge")
                .IsStatusCode(HttpStatusCode.OK);
 
-            Iis.Request("/foo/bar/baz")
-               .IsPath("/translated/foo/bar/baz")
+            Iis.Request("/hoge/foo/bar/baz")
+               .IsPath("/translated/hoge/foo/bar/baz")
                .IsStatusCode(HttpStatusCode.OK);
         }
 
@@ -50,6 +50,14 @@ namespace IisExpressTestKit.Tests
         {
             Iis.Request("/404")
                .IsStatusCode(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public void StaticFileのテスト()
+        {
+            Iis.Request("/test.txt")
+               .IsPath("/test.txt")
+               .IsStatusCode(HttpStatusCode.OK);
         }
     }
 }
