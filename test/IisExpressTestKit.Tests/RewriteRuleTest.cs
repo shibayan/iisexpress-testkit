@@ -63,7 +63,7 @@ namespace IisExpressTestKit.Tests
         [Fact]
         public void OutboundRuleのテスト()
         {
-            Iis.Request("/outbound.html", @".\outbound.html")
+            Iis.Request("/outboundtest", @".\outbound.html")
                .IsHeaderValue("Content-Type", "text/html")
                .HtmlAttribute("a", "href", "/translated/hoge")
                .IsStatusCode(HttpStatusCode.OK);
