@@ -28,6 +28,8 @@ public void RewriteRulesTest()
 
 - Make happy :)
 
+![Test Result](http://cdn-ak.f.st-hatena.com/images/fotolife/s/shiba-yan/20160619/20160619175112.png)
+
 ## License
 
 [Apache License 2.0](https://github.com/shibayan/WinQuickLook/blob/master/LICENSE)
