@@ -49,7 +49,7 @@ namespace IisExpressTestKit
             return this;
         }
 
-        public IisExpressResponse HtmlAttribute(string tagName, string attributeName, string value)
+        public IisExpressResponse HtmlAttribute(string tagName, string attributeName, string expectedValue)
         {
             var tagMatch = Regex.Match(Body, $"<{tagName}.*?>");
 
@@ -57,11 +57,11 @@ namespace IisExpressTestKit
 
             var content = tagMatch.Value;
 
-            var attributeMatch = Regex.Match(content, $"{attributeName}=\"?({value})\"?");
+            var attributeMatch = Regex.Match(content, $"{Regex.Escape(attributeName)}=\"?([^\"]*)\"?");
 
             Assert.True(attributeMatch.Success);
 
-            Assert.Contains(value, attributeMatch.Groups[1].Value);
+            Assert.Contains(expectedValue, attributeMatch.Groups[1].Value);
 
             return this;
         }
