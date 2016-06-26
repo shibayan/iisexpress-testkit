@@ -3,18 +3,18 @@ IIS Express TestKit
 
 ## Getting Started
 
-1. Create new xUnit test project
-2. Package install from NuGet
+- Create new xUnit test project
+- Install package from NuGet
 
 ```
 Install-Package IisExpressTestKit
 ```
 
-3. Write test case
+- Write test case
 
 ```csharp
 [Fact]
-public void RewriteRuleTest()
+public void RewriteRulesTest()
 {
     Iis.Request("/hoge")
        .IsPath("/translated/hoge")
@@ -26,7 +26,7 @@ public void RewriteRuleTest()
 }
 ```
 
-4. Make happy :)
+- Make happy :)
 
 ## License
 
