@@ -1,5 +1,8 @@
 IIS Express TestKit
 ================
+[![Build status](https://ci.appveyor.com/api/projects/status/v5kgu9runa70wum1?svg=true)](https://ci.appveyor.com/project/shibayan/iisexpress-testkit)
+[![License](https://img.shields.io/github/license/shibayan/iisexpress-testkit.svg)](https://github.com/shibayan/iisexpress-testkit/blob/master/LICENSE)
+[![NuGet Version](https://img.shields.io/nuget/v/IisExpressTestKit.svg)](https://www.nuget.org/packages/IisExpressTestKit/)
 
 ## Getting Started
 
