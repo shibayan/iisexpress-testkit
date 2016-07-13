@@ -33,6 +33,10 @@ public void RewriteRulesTest()
 
 ![Test Result](http://cdn-ak.f.st-hatena.com/images/fotolife/s/shiba-yan/20160619/20160619175112.png)
 
+- Running AppVeyor CI
+
+![AppVeyor](http://cdn-ak.f.st-hatena.com/images/fotolife/s/shiba-yan/20160713/20160713235842.png)
+
 ## License
 
 [Apache License 2.0](https://github.com/shibayan/WinQuickLook/blob/master/LICENSE)
