@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 
 namespace IisExpressTestKit
@@ -9,7 +10,7 @@ namespace IisExpressTestKit
         {
             Iis = new IisExpress
             {
-                RewriteConfigPath = Path.Combine("Rewrite.config")
+                RewriteConfigPath = ConfigurationManager.AppSettings["RewriteConfigPath"] ?? Path.Combine("Rewrite.config")
             };
 
             Iis.Start();
