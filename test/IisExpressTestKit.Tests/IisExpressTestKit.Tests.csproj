@@ -60,9 +60,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Rewrite.config">
+    <None Include="Transform.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Rewrite.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\IisExpressTestKit\IisExpressTestKit.csproj">

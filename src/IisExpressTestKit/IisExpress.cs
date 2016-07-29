@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
+using System.Xml;
 
 using Microsoft.Web.XmlTransform;
 
@@ -114,11 +115,26 @@ namespace IisExpressTestKit
 
             var document = new XmlTransformableDocument();
 
-            document.Load(new StringReader(WebConfigTemplate));
+            document.LoadXml(WebConfigTemplate);
 
-            var transform = new XmlTransformation(ConfigTransformPath);
+            using (var transform = new XmlTransformation(ConfigTransformPath))
+            {
+                transform.Apply(document);
+            }
 
-            transform.Apply(document);
+            var list = document.SelectNodes("//*[@configSource]");
+
+            if (list != null)
+            {
+                foreach (var node in list.Cast<XmlNode>())
+                {
+                    var source = document.CreateDocumentFragment();
+
+                    source.InnerXml = File.ReadAllText(node.Attributes["configSource"].Value);
+
+                    node.ParentNode.ReplaceChild(source.LastChild, node);
+                }
+            }
 
             document.Save(Path.Combine(_wwwroot, "Web.config"));
         }
