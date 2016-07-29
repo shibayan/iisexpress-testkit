@@ -4,4 +4,4 @@ rd /Q .\output
 mkdir .\output
 
 msbuild .\IisExpressTestKit.sln /p:Configuration=Release
-.\tools\nuget.exe pack .\src\IisExpressTestKit\IisExpressTestKit.csproj -Prop Configuration=Release -BasePath .\src -OutputDirectory .\output
+.\tools\nuget.exe pack .\src\IisExpressTestKit\IisExpressTestKit.csproj -Prop Configuration=Release -BasePath .\src -OutputDirectory .\output -Symbols
