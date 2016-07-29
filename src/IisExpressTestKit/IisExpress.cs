@@ -5,8 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Text.RegularExpressions;
 using System.Threading;
+
+using Microsoft.Web.XmlTransform;
 
 namespace IisExpressTestKit
 {
@@ -36,11 +37,10 @@ namespace IisExpressTestKit
     <modules runAllManagedModulesForAllRequests=""true"">
       <add name=""EchoHttpModule"" type=""IisExpressTestKit.EchoHttpModule, IisExpressTestKit"" />
     </modules>
-    {0}
   </system.webServer>
 </configuration>";
 
-        public string RewriteConfigPath { get; set; }
+        public string ConfigTransformPath { get; set; }
         
         public void Start()
         {
@@ -109,12 +109,18 @@ namespace IisExpressTestKit
                 Directory.CreateDirectory(binDirectory);
             }
 
-            CopyFileToDirectory(RewriteConfigPath, _wwwroot);
+            CopyFileToDirectory(ConfigTransformPath, _wwwroot);
             CopyFileToDirectory(typeof(IisExpress).Assembly.Location, binDirectory);
-            
-            var contents = string.Format(WebConfigTemplate, Regex.Replace(File.ReadAllText(RewriteConfigPath), @"^<\?xml.*$", "", RegexOptions.Multiline));
 
-            File.WriteAllText(Path.Combine(_wwwroot, "Web.config"), contents);
+            var document = new XmlTransformableDocument();
+
+            document.Load(new StringReader(WebConfigTemplate));
+
+            var transform = new XmlTransformation(ConfigTransformPath);
+
+            transform.Apply(document);
+
+            document.Save(Path.Combine(_wwwroot, "Web.config"));
         }
 
         private void WaitForStartup()

@@ -10,7 +10,7 @@ namespace IisExpressTestKit
         {
             Iis = new IisExpress
             {
-                RewriteConfigPath = ConfigurationManager.AppSettings["RewriteConfigPath"] ?? Path.Combine("Rewrite.config")
+                ConfigTransformPath = ConfigurationManager.AppSettings["ConfigTransformPath"] ?? Path.Combine("Transform.config")
             };
 
             Iis.Start();
