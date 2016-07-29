@@ -68,5 +68,21 @@ namespace IisExpressTestKit.Tests
                .HtmlAttribute("a", "href", "/translated/hoge")
                .IsStatusCode(HttpStatusCode.OK);
         }
+
+        [Fact]
+        public void OutboundRuleのテスト2()
+        {
+            Iis.Request("/outboundtest", @".\outbound.html")
+               .Contains("<script type='text/javascript'>TRACKING CODE</script>")
+               .IsStatusCode(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public void OutboundRuleのテスト3()
+        {
+            Iis.Request("/outboundtest", @".\outbound.txt")
+               .DoesNotContain("<script type='text/javascript'>TRACKING CODE</script>")
+               .IsStatusCode(HttpStatusCode.OK);
+        }
     }
 }

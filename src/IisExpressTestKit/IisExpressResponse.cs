@@ -49,6 +49,13 @@ namespace IisExpressTestKit
             return this;
         }
 
+        public IisExpressResponse DoesNotContain(string expectedSubstring)
+        {
+            Assert.DoesNotContain(expectedSubstring, Body);
+
+            return this;
+        }
+
         public IisExpressResponse HtmlAttribute(string tagName, string attributeName, string expectedValue)
         {
             var tagMatch = Regex.Match(Body, $"<{tagName}.*?>");
