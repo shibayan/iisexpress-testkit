@@ -132,7 +132,9 @@ namespace IisExpressTestKit
 
                     source.InnerXml = File.ReadAllText(node.Attributes["configSource"].Value);
 
-                    node.ParentNode.ReplaceChild(source.LastChild, node);
+                    var newNode = source.ChildNodes.Cast<XmlNode>().First(x => x.NodeType == XmlNodeType.Element);
+
+                    node.ParentNode.ReplaceChild(newNode, node);
                 }
             }
 
