@@ -71,9 +71,9 @@ namespace IisExpressTestKit
             Stop();
         }
 
-        public IisExpressResponse Request(string path, string originalFile = null)
+        public IisExpressResponse Request(string path, string originalFile = null, Action<IisExpressRequestOptions> options = null)
         {
-            var response = ExecuteRequest(FormatAbsoluteUrl(path), originalFile);
+            var response = ExecuteRequest(FormatAbsoluteUrl(path), originalFile, options);
 
             var data = new IisExpressResponse
             {
@@ -179,7 +179,7 @@ namespace IisExpressTestKit
             return $"http://localhost:{_port}{path}";
         }
 
-        private static HttpWebResponse ExecuteRequest(string url, string originalFile)
+        private static HttpWebResponse ExecuteRequest(string url, string originalFile, Action<IisExpressRequestOptions> options)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
 
@@ -188,6 +188,20 @@ namespace IisExpressTestKit
             if (!string.IsNullOrEmpty(originalFile))
             {
                 request.Headers["X-OriginalFile"] = Path.GetFullPath(originalFile);
+            }
+
+            if (options != null)
+            {
+                var optionsValue = new IisExpressRequestOptions();
+
+                options(optionsValue);
+
+                request.Headers["X-Iis-StatusCode"] = ((int)optionsValue.StatusCode).ToString();
+
+                foreach (var key in optionsValue.Headers.AllKeys)
+                {
+                    request.Headers["X-Iis-Header-" + key] = optionsValue.Headers[key];
+                }
             }
 
             try

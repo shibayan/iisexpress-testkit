@@ -68,6 +68,7 @@
     <Compile Include="IisExpress.cs" />
     <Compile Include="IisExpressFixture.cs" />
     <Compile Include="IisExpressResponse.cs" />
+    <Compile Include="IisExpressRequestOptions.cs" />
     <Compile Include="IisRewriteTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

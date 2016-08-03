@@ -53,6 +53,27 @@ namespace IisExpressTestKit.Tests
         }
 
         [Fact]
+        public void StatusCodeのテスト2()
+        {
+            Iis.Request("/statuscode", options: options => options.StatusCode = HttpStatusCode.BadRequest)
+               .IsStatusCode(HttpStatusCode.BadRequest);
+
+            Iis.Request("/statuscode", options: options => options.StatusCode = HttpStatusCode.InternalServerError)
+               .IsStatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
+        public void CustomHeaderのテスト()
+        {
+            Iis.Request("/customheader", options: options =>
+            {
+                options.Headers["Content-Type"] = "application/json";
+            })
+               .IsHeaderValue("Content-Type", "application/json")
+               .IsStatusCode(HttpStatusCode.OK);
+        }
+
+        [Fact]
         public void StaticFileのテスト()
         {
             Iis.Request("/test", "outbound.html")
@@ -75,11 +96,19 @@ namespace IisExpressTestKit.Tests
             Iis.Request("/outboundtest", @".\outbound.html")
                .Contains("<script type='text/javascript'>TRACKING CODE</script>")
                .IsStatusCode(HttpStatusCode.OK);
+
+            Iis.Request("/outboundtest", @".\outbound.txt", options => options.Headers["Content-Type"] = "text/html")
+               .Contains("<script type='text/javascript'>TRACKING CODE</script>")
+               .IsStatusCode(HttpStatusCode.OK);
         }
 
         [Fact]
         public void OutboundRuleのテスト3()
         {
+            Iis.Request("/outboundtest", @".\outbound.html", options => options.Headers["Content-Type"] = "text/plain")
+               .DoesNotContain("<script type='text/javascript'>TRACKING CODE</script>")
+               .IsStatusCode(HttpStatusCode.OK);
+
             Iis.Request("/outboundtest", @".\outbound.txt")
                .DoesNotContain("<script type='text/javascript'>TRACKING CODE</script>")
                .IsStatusCode(HttpStatusCode.OK);
