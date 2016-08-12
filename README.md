@@ -39,4 +39,4 @@ public void RewriteRulesTest()
 
 ## License
 
-[Apache License 2.0](https://github.com/shibayan/WinQuickLook/blob/master/LICENSE)
+[Apache License 2.0](https://github.com/shibayan/iisexpress-testkit/blob/master/LICENSE)
