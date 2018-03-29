@@ -8,6 +8,8 @@ namespace IisExpressTestKit
 {
     public class IisExpressResponse
     {
+        internal IisExpressResponse() { }
+
         public string Host { get; set; }
         public string Path { get; set; }
         public HttpStatusCode StatusCode { get; set; }

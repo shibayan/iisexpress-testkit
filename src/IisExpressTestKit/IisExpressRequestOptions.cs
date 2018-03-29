@@ -5,14 +5,9 @@ namespace IisExpressTestKit
 {
     public class IisExpressRequestOptions
     {
-        internal IisExpressRequestOptions()
-        {
-            StatusCode = HttpStatusCode.OK;
-            Headers = new NameValueCollection();
-        }
+        internal IisExpressRequestOptions() { }
 
-        public HttpStatusCode StatusCode { get; set; }
-
-        public NameValueCollection Headers { get; set; }
+        public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
+        public NameValueCollection Headers { get; set; } = new NameValueCollection();
     }
 }
