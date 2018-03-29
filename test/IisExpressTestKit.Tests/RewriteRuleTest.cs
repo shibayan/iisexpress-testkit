@@ -65,10 +65,7 @@ namespace IisExpressTestKit.Tests
         [Fact]
         public void CustomHeaderのテスト()
         {
-            Iis.Request("/customheader", options: options =>
-            {
-                options.Headers["Content-Type"] = "application/json";
-            })
+            Iis.Request("/customheader", options: options => { options.Headers["Content-Type"] = "application/json"; })
                .IsHeaderValue("Content-Type", "application/json")
                .IsStatusCode(HttpStatusCode.OK);
         }

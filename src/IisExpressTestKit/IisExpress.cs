@@ -196,11 +196,11 @@ namespace IisExpressTestKit
 
                 options(optionsValue);
 
-                request.Headers["X-Iis-StatusCode"] = ((int)optionsValue.StatusCode).ToString();
+                request.Headers["X-IIS-StatusCode"] = ((int)optionsValue.StatusCode).ToString();
 
                 foreach (var key in optionsValue.Headers.AllKeys)
                 {
-                    request.Headers["X-Iis-Header-" + key] = optionsValue.Headers[key];
+                    request.Headers["X-IIS-Header-" + key] = optionsValue.Headers[key];
                 }
             }
 

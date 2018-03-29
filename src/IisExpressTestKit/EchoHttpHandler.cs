@@ -28,11 +28,9 @@ namespace IisExpressTestKit
                     context.Response.WriteFile(originalFile);
                 }
 
-                int statusCode;
+                context.Response.StatusCode = int.TryParse(context.Request.Headers["X-IIS-StatusCode"], out var statusCode) ? statusCode : 200;
 
-                context.Response.StatusCode = int.TryParse(context.Request.Headers["X-Iis-StatusCode"], out statusCode) ? statusCode : 200;
-
-                foreach (var key in context.Request.Headers.AllKeys.Where(x => x.StartsWith("X-Iis-Header-")))
+                foreach (var key in context.Request.Headers.AllKeys.Where(x => x.StartsWith("X-IIS-Header-")))
                 {
                     var headerKey = key.Substring(13);
 

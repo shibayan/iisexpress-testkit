@@ -9,17 +9,17 @@ namespace IisExpressTestKit
         {
             _context = context;
 
-            context.PreSendRequestHeaders += Context_PreSendRequestHeaders;
+            context.PreSendRequestHeaders += OnPreSendRequestHeaders;
         }
 
         private HttpApplication _context;
 
         public void Dispose()
         {
-            _context.PreSendRequestHeaders -= Context_PreSendRequestHeaders;
+            _context.PreSendRequestHeaders -= OnPreSendRequestHeaders;
         }
 
-        private void Context_PreSendRequestHeaders(object sender, EventArgs e)
+        private void OnPreSendRequestHeaders(object sender, EventArgs e)
         {
             var context = HttpContext.Current;
 
